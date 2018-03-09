@@ -134,17 +134,21 @@ describe('exercise one (involving poem one)', function () {
 
 
 		var originalLog = console.log;
+		function replacementLog () {
+			var args = [].slice.call(arguments);
+			console.log.calls.push({
+				args: args,
+				priorNumBlueCalls: blue.__spy.calls.length,
+				priorNumMagentaCalls: magenta.__spy.calls.length
+			});
+			return originalLog.apply(console, arguments);
+		}
 		beforeEach(function () {
-			console.log = function () {
-				var args = [].slice.call(arguments);
-				console.log.calls.push({
-					args: args,
-					priorNumBlueCalls: blue.__spy.calls.length,
-					priorNumMagentaCalls: magenta.__spy.calls.length
-				});
-				return originalLog.apply(console, arguments);
-			}
-			console.log.calls = [];
+			console.log = replacementLog;
+			replacementLog.calls = [];
+		});
+		afterEach(function () {
+			console.log = originalLog;
 		});
 
 		xit('logs the third THEN the fourth stanza; if an error occrus only logs the error and does not continue reading (if there is a file still left to read); always finishes by logging some done message', function (done) {
