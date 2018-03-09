@@ -34,17 +34,21 @@ describe('exercise two (involving poem two)', function () {
 	});
 
 	var originalLog = console.log;
+	function replacementLog () {
+		var args = [].slice.call(arguments);
+		console.log.calls.push({
+			args: args,
+			priorNumBlueCalls: blue.__spy.calls.length,
+			priorNumMagentaCalls: magenta.__spy.calls.length
+		});
+		return originalLog.apply(console, arguments);
+	}
 	beforeEach(function () {
-		console.log = function () {
-			var args = [].slice.call(arguments);
-			console.log.calls.push({
-				args: args,
-				priorNumBlueCalls: blue.__spy.calls.length,
-				priorNumRedCalls: magenta.__spy.calls.length
-			});
-			return originalLog.apply(console, arguments);
-		}
-		console.log.calls = [];
+		console.log = replacementLog;
+		replacementLog.calls = [];
+	});
+	afterEach(function () {
+		console.log = originalLog;
 	});
 
 	function getLoggedDoneCalls () {
