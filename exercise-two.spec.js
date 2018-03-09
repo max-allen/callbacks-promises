@@ -39,7 +39,7 @@ describe('exercise two (involving poem two)', function () {
 		console.log.calls.push({
 			args: args,
 			priorNumBlueCalls: blue.__spy.calls.length,
-			priorNumMagentaCalls: magenta.__spy.calls.length
+			priorNumRedCalls: magenta.__spy.calls.length
 		});
 		return originalLog.apply(console, arguments);
 	}
